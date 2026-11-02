@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Consumption Estimation - FabricSense</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --accent: #e94560;
+            --accent-light: #ff6b81;
+            --text-dark: #333;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            color: var(--text-dark);
+            padding: 1.2rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .back-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .back-link:hover {
+            color: var(--accent-light);
+        }
+
+        .back-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(233, 69, 96, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 107, 129, 0.1), transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 1.2s ease;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: -3rem auto 3rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.12);
+        }
+
+        .feature-img {
+            width: 100%;
+            max-height: 400px;
+            margin: 0 auto 2rem;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 6rem;
+            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.3);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 2rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        h3 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin: 1rem 0;
+            font-weight: 700;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        /* Factor Cards */
+        .factors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .factor-card {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.05) 0%, rgba(255, 107, 129, 0.05) 100%);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid rgba(233, 69, 96, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .factor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .factor-card:hover {
+            transform: translateY(-10px);
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.1) 0%, rgba(255, 107, 129, 0.1) 100%);
+            border-color: rgba(233, 69, 96, 0.3);
+            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.2);
+        }
+
+        .factor-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .factor-icon {
+            width: 75px;
+            height: 75px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.3);
+        }
+
+        .factor-card h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .factor-card p {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Garment Cards */
+        .garment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .garment-card {
+            background: white;
+            padding: 2rem 1.5rem;
+            border-radius: 15px;
+            border: 2px solid #e1e8ed;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .garment-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.2);
+            transform: translateY(-8px);
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.02) 0%, rgba(255, 107, 129, 0.02) 100%);
+        }
+
+        .garment-header {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .garment-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+        }
+
+        .garment-card h4 {
+            color: var(--primary);
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .consumption-range {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.08) 0%, rgba(255, 107, 129, 0.08) 100%);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 0.8rem 0;
+            border-left: 3px solid var(--accent);
+        }
+
+        .consumption-range strong {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* Benefits List */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .benefit-item {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.05) 0%, rgba(255, 107, 129, 0.05) 100%);
+            padding: 1.8rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            border: 2px solid rgba(233, 69, 96, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .benefit-item:hover {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.1) 0%, rgba(255, 107, 129, 0.1) 100%);
+            border-color: rgba(233, 69, 96, 0.3);
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(233, 69, 96, 0.15);
+        }
+
+        .benefit-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+        }
+
+        .benefit-text h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .benefit-text p {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Formula Section */
+        .formula-box {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.08) 0%, rgba(255, 107, 129, 0.08) 100%);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border-left: 5px solid var(--accent);
+            margin: 2rem 0;
+        }
+
+        .formula-box h3 {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+        }
+
+        .formula {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.15rem;
+            color: var(--primary);
+            text-align: center;
+            margin: 1.5rem 0;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.1);
+        }
+
+        /* Stats Section */
+        .stats-inline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-inline {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.05) 0%, rgba(255, 107, 129, 0.05) 100%);
+            border-radius: 15px;
+            border: 2px solid rgba(233, 69, 96, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-inline:hover {
+            transform: translateY(-5px);
+            border-color: rgba(233, 69, 96, 0.3);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.15);
+        }
+
+        .stat-inline-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-inline-label {
+            color: #666;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Process Steps */
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .step-card {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            border: 2px solid #e1e8ed;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.2);
+        }
+
+        .step-number {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.3);
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            padding: 1.5rem 1.2rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .comparison-table td {
+            padding: 1.3rem 1.2rem;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .comparison-table tbody tr:hover {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.03) 0%, rgba(255, 107, 129, 0.03) 100%);
+        }
+
+        .comparison-table td strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            padding: 3.5rem 3rem;
+            border-radius: 25px;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.3);
+        }
+
+        .cta-section h2 {
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            background: none;
+            -webkit-text-fill-color: white;
+        }
+
+        .cta-section p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--accent);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255,255,255,0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            opacity: 0.9;
+        }
+
+        footer p:first-child {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .content-card {
+                padding: 2rem;
+            }
+
+            .factors-grid,
+            .garment-grid,
+            .benefits-grid,
+            .process-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-section {
+                padding: 2.5rem 2rem;
+            }
+
+            .logo-text {
+                font-size: 1.2rem;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 1rem 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo-container">
+                <div class="logo-text">FabricSense</div>
+            </a>
+            <a href="index.html" class="back-link">← Back to Home</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Smart Consumption Estimation</h1>
+        <p>Precision fabric calculations powered by machine learning - eliminate wastage, optimize costs, and plan your garment production with data-driven accuracy</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Introduction Card -->
+        <div class="content-card">
+            
+            <h2>What is Smart Consumption Estimation?</h2>
+            <p>
+                FabricSense revolutionizes fabric consumption calculation through advanced machine learning regression models. 
+                Our intelligent system analyzes multiple variables including garment type, size specifications, fabric width, 
+                design complexity, and wastage patterns to provide accurate fabric requirement predictions in real-time.
+            </p>
+            <p>
+                Gone are the days of manual calculations, rough estimates, and costly fabric wastage. Our AI-powered system 
+                learns from thousands of garment patterns and production data to deliver precise consumption estimates that 
+                help fashion students, designers, and manufacturers optimize their fabric usage and reduce costs significantly.
+            </p>
+
+            <!-- Stats -->
+            <div class="stats-inline">
+                <div class="stat-inline">
+                    <div class="stat-inline-number">±5%</div>
+                    <div class="stat-inline-label">Accuracy Range</div>
+                </div>
+                <div class="stat-inline">
+                    <div class="stat-inline-number">30%</div>
+                    <div class="stat-inline-label">Waste Reduction</div>
+                </div>
+                <div class="stat-inline">
+                    <div class="stat-inline-number">100+</div>
+                    <div class="stat-inline-label">Garment Types</div>
+                </div>
+                <div class="stat-inline">
+                    <div class="stat-inline-number">Instant</div>
+                    <div class="stat-inline-label">Results</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Factors Considered -->
+        <div class="content-card">
+            <h2>Key Factors Analyzed by Our AI Model</h2>
+            <p>Our machine learning model considers multiple critical variables to ensure precise fabric consumption estimates:</p>
+            
+            <div class="factors-grid">
+                <div class="factor-card">
+                    <h3>Garment Type</h3>
+                    <p>Shirt, dress, trousers, skirt, jacket, blouse, and 100+ garment categories</p>
+                </div>
+                <div class="factor-card">
+                    <h3>Garment Size</h3>
+                    <p>XS to 5XL sizing with custom measurements and body dimensions</p>
+                </div>
+                <div class="factor-card">
+                    <h3>Fabric Width</h3>
+                    <p>36", 44", 54", 60" and custom widths with efficiency calculations</p>
+                </div>
+                <div class="factor-card">
+                    <h3>Design Complexity</h3>
+                    <p>Pleats, gathers, flares, ruffles, and intricate design elements</p>
+                </div>
+                <div class="factor-card">
+                    <h3>Fabric Type</h3>
+                    <p>Stretch, drape, weight, and material properties affecting layout</p>
+                </div>
+                <div class="factor-card">
+                    <h3>Pattern Layout</h3>
+                    <p>Marker efficiency, nap direction, pattern matching requirements</p>
+                </div>
+                <div class="factor-card">
+                    <h3>Cutting Allowance</h3>
+                    <p>Seam allowances, hem depths, and construction methods</p>
+                </div>
+                <div class="factor-card">
+                    <h3>Wastage Factor</h3>
+                    <p>Industry-standard wastage allowance (5-15%) based on fabric type</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Garment Examples -->
+        <div class="content-card">
+            <h2>Consumption Examples by Garment Type</h2>
+            <p>Typical fabric consumption ranges for standard sizes (may vary based on specific design and measurements):</p>
+            
+            <div class="garment-grid">
+                <div class="garment-card">
+                    <div class="garment-header">
+                        <div class="garment-icon">👔</div>
+                        <h4>Men's Shirt</h4>
+                    </div>
+                    <div class="consumption-range">
+                        <strong>Consumption:</strong> 1.8 - 2.5 meters
+                    </div>
+                    <p>Depends on sleeve length, collar type, and body fit</p>
+                </div>
+                <div class="garment-card">
+                    <div class="garment-header">
+                        <div class="garment-icon">👗</div>
+                        <h4>Women's Dress</h4>
+                    </div>
+                    <div class="consumption-range">
+                        <strong>Consumption:</strong> 2.5 - 4.5 meters
+                    </div>
+                    <p>Varies with dress length, flare, and style complexity</p>
+                </div>
+                <div class="garment-card">
+                    <div class="garment-header">
+                        <div class="garment-icon">👖</div>
+                        <h4>Trousers/Pants</h4>
+                    </div>
+                    <div class="consumption-range">
+                        <strong>Consumption:</strong> 1.5 - 2.2 meters
+                    </div>
+                    <p>Based on inseam length, rise, and leg width</p>
+                </div>
+                <div class="garment-card">
+                    <div class="garment-header">
+                        <div class="garment-icon">👚</div>
+                        <h4>Women's Blouse</h4>
+                    </div>
+                    <div class="consumption-range">
+                        <strong>Consumption:</strong> 1.2 - 2.0 meters
+                    </div>
+                    <p>Simple to elaborate styles with various sleeve options</p>
+                </div>
+                <div class="garment-card">
+                    <div class="garment-header">
+                        <div class="garment-icon">🧥</div>
+                        <h4>Jacket/Blazer</h4>
+                    </div>
+                    <div class="consumption-range">
+                        <strong>Consumption:</strong> 2.0 - 3.5 meters
+                    </div>
+                    <p>Including lining, interfacing, and construction details</p>
+                </div>
+                <div class="garment-card">
+                    <div class="garment-header">
+                        <div class="garment-icon">👘</div>
+                        <h4>Skirt</h4>
+                    </div>
+                    <div class="consumption-range">
+                        <strong>Consumption:</strong> 1.0 - 3.0 meters
+                    </div>
+                    <p>From pencil skirts to full circular styles</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="content-card">
+            <h2>How the Estimation Process Works</h2>
+            <div class="process-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Input Details</h3>
+                    <p>User enters garment type, size, fabric width, and design specifications</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Data Processing</h3>
+                    <p>System processes inputs through trained ML regression model</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Pattern Analysis</h3>
+                    <p>AI analyzes pattern layout efficiency and marker placement</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Calculation</h3>
+                    <p>Model calculates consumption with wastage allowance included</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">5</div>
+                    <h3>Results Display</h3>
+                    <p>Detailed consumption report with breakdown and recommendations</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formula Section -->
+        <div class="content-card">
+            <h2>Estimation Formula & Methodology</h2>
+            <div class="formula-box">
+                <h3>Basic Consumption Formula</h3>
+                <div class="formula">
+                    Fabric Required = (Pattern Length × Pieces) / Fabric Width + Wastage %
+                </div>
+                <p>Our AI model uses advanced regression analysis that goes beyond basic formulas by learning from thousands of real production patterns to account for:</p>
+                <ul style="margin-left: 2rem; color: #666; line-height: 2;">
+                    <li>Optimal marker efficiency based on garment pieces</li>
+                    <li>Fabric-specific shrinkage and stretch factors</li>
+                    <li>Pattern matching requirements for prints and stripes</li>
+                    <li>Grain line considerations and directional fabrics</li>
+                    <li>Size grading efficiency across multiple sizes</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Benefits -->
+        <div class="content-card">
+            <h2>Key Benefits & Advantages</h2>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>Cost Savings</h4>
+                        <p>Reduce fabric costs by 20-30% through accurate consumption planning and minimal wastage</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>Time Efficiency</h4>
+                        <p>Get instant results versus hours of manual calculations and pattern layout planning</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>High Accuracy</h4>
+                        <p>Achieve ±5% accuracy compared to ±15-20% with traditional estimation methods</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>Educational Tool</h4>
+                        <p>Help students understand professional consumption calculation and pattern efficiency</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>Bulk Production</h4>
+                        <p>Plan large-scale manufacturing with confidence in fabric procurement quantities</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>Sustainability</h4>
+                        <p>Minimize textile waste contributing to eco-friendly and sustainable fashion practices</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>Budget Planning</h4>
+                        <p>Accurate cost estimation for projects, tenders, and production budgets</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>Multiple Scenarios</h4>
+                        <p>Compare consumption across different fabric widths and layout options</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+
+        <!-- Use Cases -->
+        <div class="content-card">
+            <h2>Real-World Applications</h2>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>Fashion Education</h4>
+                        <p>Students learn professional consumption calculation methods used in the industry</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>Custom Tailoring</h4>
+                        <p>Tailors estimate precise fabric quantities for bespoke garments and made-to-measure orders</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>Garment Manufacturing</h4>
+                        <p>Factories optimize bulk fabric procurement and reduce production costs significantly</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>Project Planning</h4>
+                        <p>Designers create accurate material lists and budget estimates for client presentations</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>Fabric Retail</h4>
+                        <p>Shop assistants help customers determine exact yardage needed for their projects</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-text">
+                        <h4>Cost Estimation</h4>
+                        <p>Calculate production costs and create competitive pricing for garment orders</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+
+        <!-- Tips Section -->
+        <div class="content-card">
+            <h2>Tips for Best Results</h2>
+            <div class="formula-box">
+                <h3>Getting Accurate Estimates</h3>
+                <ul style="margin-left: 2rem; color: #666; line-height: 2;">
+                    <li><strong>Provide accurate measurements:</strong> Double-check garment dimensions and size specifications</li>
+                    <li><strong>Consider design details:</strong> Include all pleats, gathers, flares, and special features</li>
+                    <li><strong>Know your fabric width:</strong> Always measure fabric width accurately before estimation</li>
+                    <li><strong>Account for pattern matching:</strong> Add extra allowance for striped or printed fabrics</li>
+                    <li><strong>Include lining and interfacing:</strong> Calculate separate requirements for support materials</li>
+                    <li><strong>Test with sample:</strong> For critical projects, create a test garment to verify consumption</li>
+                    <li><strong>Buy slightly extra:</strong> Purchase 10-15cm extra as safety margin for cutting errors</li>
+                </ul>
+            </div>
+        </div>
+
+       
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2>Ready to Optimize Your Fabric Usage?</h2>
+            <p>Start calculating precise fabric consumption and reduce waste today with our AI-powered estimation tool</p>
+            <div class="cta-buttons">
+                <a href="userSignup.html" class="btn btn-primary">Get Started Free</a>
+                <a href="index.html#how-it-works" class="btn btn-secondary">See Demo</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 FabricSense - AI-Based Fabric Identification & Consumption Estimation System</p>
+        <p>Developed by D.M. Chathurya Hiruni Gunathilaka | Cardiff Metropolitan University</p>
+    </footer>
+
+    <script>
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.content-card, .factor-card, .benefit-item, .garment-card, .step-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

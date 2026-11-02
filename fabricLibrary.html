@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric Library - FabricSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box {
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4caf50;
+            border-radius: 15px;
+            padding: 1rem;
+            margin: 1rem auto;
+            max-width: 900px;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e94560, #ff6b81);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1a1a2e;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f0f0;
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            padding: 3rem;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .fabric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .fabric-category {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .fabric-category h3 {
+            font-family: 'Playfair Display', serif;
+            color: #1a1a2e;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .fabric-samples {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .sample-item {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .sample-item:hover {
+            border-color: #e94560;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.3);
+        }
+
+        .sample-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .error-message {
+            background: rgba(233, 69, 96, 0.2);
+            border: 2px solid #e94560;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .error-message h3 {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="fabricIdentificationTool.html" class="back-link">← Back to Upload Tool</a>
+            <h1>📚 Fabric Library</h1>
+            <p>Browse and identify fabrics from the TED Textile Dataset</p>
+            
+            <div class="info-box">
+                <p>✅ These images are from the training dataset and will provide 99%+ accurate identification!</p>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="loadLibrary()">🔄 Reload Library</button>
+                <a href="fabricIdentificationTool.html" class="btn btn-secondary">📤 Upload Custom Image</a>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading fabric library...</p>
+        </div>
+
+        <div id="error" class="error-message" style="display: none;"></div>
+
+        <div id="fabricGrid" class="fabric-grid" style="display: none;"></div>
+    </div>
+
+    <script>
+        const fabricIcons = {
+            'Chiffon': '🌸',
+            'Cotton': '🌿',
+            'Denim': '👖',
+            'Linen': '🌾',
+            'Nylon': '💪',
+            'Polyester': '🔬',
+            'Satin': '💎',
+            'Silk': '✨',
+            'Velvet': '🎩',
+            'Wool': '🐑'
+        };
+
+        async function loadLibrary() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('fabricGrid').style.display = 'none';
+
+            try {
+                const response = await fetch('getFabricLibrary.php');
+                const data = await response.json();
+
+                if (data.success) {
+                    displayLibrary(data.library);
+                } else {
+                    showError(data.message || 'Failed to load fabric library');
+                }
+            } catch (error) {
+                showError('Error connecting to server: ' + error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function displayLibrary(library) {
+            const grid = document.getElementById('fabricGrid');
+            grid.innerHTML = '';
+
+            const fabricTypes = Object.keys(library).sort();
+
+            if (fabricTypes.length === 0) {
+                showError('No fabric images found. Please check that the "TED Textile Dataset" folder exists.');
+                return;
+            }
+
+            fabricTypes.forEach(fabricType => {
+                const images = library[fabricType];
+                const icon = fabricIcons[fabricType] || '🧵';
+
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'fabric-category';
+
+                const heading = document.createElement('h3');
+                heading.textContent = `${icon} ${fabricType}`;
+                categoryDiv.appendChild(heading);
+
+                const samplesDiv = document.createElement('div');
+                samplesDiv.className = 'fabric-samples';
+
+                images.forEach(image => {
+                    const sampleDiv = document.createElement('div');
+                    sampleDiv.className = 'sample-item';
+                    sampleDiv.onclick = () => identifyFabric(image.path, fabricType);
+
+                    const img = document.createElement('img');
+                    img.src = image.path;
+                    img.alt = `${fabricType} sample`;
+                    img.title = `Click to identify this ${fabricType} sample`;
+
+                    sampleDiv.appendChild(img);
+                    samplesDiv.appendChild(sampleDiv);
+                });
+
+                categoryDiv.appendChild(samplesDiv);
+                grid.appendChild(categoryDiv);
+            });
+
+            grid.style.display = 'grid';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.innerHTML = `
+                <h3>⚠️ Error</h3>
+                <p>${message}</p>
+                <p style="margin-top: 1rem; font-size: 0.9rem;">Make sure the "TED Textile Dataset" folder is in the FabricSense directory with fabric subfolders.</p>
+            `;
+            errorDiv.style.display = 'block';
+        }
+
+        async function identifyFabric(imagePath, expectedFabric) {
+            // Convert file path to blob and send to identification API
+            try {
+                const response = await fetch(imagePath);
+                const blob = await response.blob();
+
+                const formData = new FormData();
+                formData.append('image', blob, 'fabric_sample.jpg');
+                formData.append('show_alternatives', 'true');
+                formData.append('include_care', 'true');
+
+                // Redirect to identification tool with the result
+                window.location.href = `fabricIdentificationTool.html?dataset_image=${encodeURIComponent(imagePath)}&expected=${encodeURIComponent(expectedFabric)}`;
+            } catch (error) {
+                alert('Error loading image: ' + error.message);
+            }
+        }
+
+        // Load library on page load
+        loadLibrary();
+    </script>
+</body>
+</html>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box {
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4caf50;
+            border-radius: 15px;
+            padding: 1rem;
+            margin: 2rem auto;
+            max-width: 900px;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        .fabric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .fabric-category {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .fabric-category h3 {
+            font-family: 'Playfair Display', serif;
+            color: #1a1a2e;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .fabric-samples {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .sample-item {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .sample-item:hover {
+            border-color: #e94560;
+            transform: scale(1.05);
+        }
+
+        .sample-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #e94560, #ff6b81);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .instruction {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .instruction h2 {
+            color: #1a1a2e;
+            margin-bottom: 1rem;
+        }
+
+        .instruction p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .instruction ol {
+            text-align: left;
+            max-width: 600px;
+            margin: 1.5rem auto;
+            color: #666;
+        }
+
+        .instruction li {
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="loginHomePage.html" class="back-link">← Back to Home</a>
+            <h1>📚 Fabric Library</h1>
+            <p>Select from our curated Ten Fabric Dataset collection</p>
+            
+            <div class="info-box">
+                <p>✅ These images are from the training dataset and will provide accurate identification results!</p>
+            </div>
+        </div>
+
+        <div class="instruction">
+            <h2>📋 How to Use the Fabric Library</h2>
+            <p>Follow these steps to identify fabrics using our dataset images:</p>
+            <ol>
+                <li><strong>Copy your Ten Fabric Dataset folder</strong> to this project directory</li>
+                <li><strong>Rename the folder to</strong> <code>fabric_dataset</code></li>
+                <li><strong>Folder structure should be:</strong>
+                    <br><code>FabricSense/fabric_dataset/Chiffon/</code>
+                    <br><code>FabricSense/fabric_dataset/Cotton/</code>
+                    <br><code>FabricSense/fabric_dataset/Denim/</code>
+                    <br>... (and so on for all 10 fabric types)
+                </li>
+                <li><strong>Reload this page</strong> to see the fabric images</li>
+                <li><strong>Click any image</strong> to identify it using the AI model</li>
+            </ol>
+            <p style="margin-top: 1.5rem; color: #e94560; font-weight: 600;">
+                Once you've copied the dataset folder, this page will display a gallery of all fabric samples!
+            </p>
+        </div>
+
+        <div id="fabricGrid" class="fabric-grid">
+            <!-- Placeholder fabric categories -->
+            <div class="fabric-category">
+                <h3>🌸 Chiffon</h3>
+                <div class="fabric-samples">
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                </div>
+            </div>
+
+            <div class="fabric-category">
+                <h3>🌿 Cotton</h3>
+                <div class="fabric-samples">
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                </div>
+            </div>
+
+            <div class="fabric-category">
+                <h3>👖 Denim</h3>
+                <div class="fabric-samples">
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                </div>
+            </div>
+
+            <div class="fabric-category">
+                <h3>🌾 Linen</h3>
+                <div class="fabric-samples">
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                </div>
+            </div>
+
+            <div class="fabric-category">
+                <h3>💪 Nylon</h3>
+                <div class="fabric-samples">
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                </div>
+            </div>
+
+            <div class="fabric-category">
+                <h3>🔬 Polyester</h3>
+                <div class="fabric-samples">
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                </div>
+            </div>
+
+            <div class="fabric-category">
+                <h3>💎 Satin</h3>
+                <div class="fabric-samples">
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                </div>
+            </div>
+
+            <div class="fabric-category">
+                <h3>✨ Silk</h3>
+                <div class="fabric-samples">
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                </div>
+            </div>
+
+            <div class="fabric-category">
+                <h3>🎩 Velvet</h3>
+                <div class="fabric-samples">
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                </div>
+            </div>
+
+            <div class="fabric-category">
+                <h3>🐑 Wool</h3>
+                <div class="fabric-samples">
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                    <div class="sample-item"><div class="placeholder">📸</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

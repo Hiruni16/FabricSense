@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Tool - FabricSense</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --accent: #e94560;
+            --accent-light: #ff6b81;
+            --text-dark: #333;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            color: var(--text-dark);
+            padding: 1.2rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .back-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .back-link:hover {
+            color: var(--accent-light);
+        }
+
+        .back-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(233, 69, 96, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 107, 129, 0.1), transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 1.2s ease;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: -3rem auto 3rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.12);
+        }
+
+        .feature-img {
+            width: 100%;
+            max-height: 400px;
+            margin: 0 auto 2rem;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 6rem;
+            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.3);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 2rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        h3 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin: 1rem 0;
+            font-weight: 700;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        /* Learning Benefits Grid */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .benefit-card {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.05) 0%, rgba(255, 107, 129, 0.05) 100%);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(233, 69, 96, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .benefit-card:hover {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.1) 0%, rgba(255, 107, 129, 0.1) 100%);
+            border-color: rgba(233, 69, 96, 0.3);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.2);
+        }
+
+        .benefit-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .benefit-icon {
+            width: 75px;
+            height: 75px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.3);
+        }
+
+        .benefit-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card p {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Course Types */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .course-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid #e1e8ed;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .course-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.2);
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.02) 0%, rgba(255, 107, 129, 0.02) 100%);
+        }
+
+        .course-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(233, 69, 96, 0.1);
+        }
+
+        .course-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+        }
+
+        .course-card h4 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .course-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .course-list li {
+            padding: 0.8rem 0;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .course-list li:before {
+            content: "✓";
+            color: white;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        /* Features List */
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.05) 0%, rgba(255, 107, 129, 0.05) 100%);
+            padding: 1.8rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            border: 2px solid rgba(233, 69, 96, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-item:hover {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.1) 0%, rgba(255, 107, 129, 0.1) 100%);
+            border-color: rgba(233, 69, 96, 0.3);
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(233, 69, 96, 0.15);
+        }
+
+        .feature-icon-small {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+        }
+
+        .feature-text h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .feature-text p {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Stats Section */
+        .stats-inline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-inline {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.05) 0%, rgba(255, 107, 129, 0.05) 100%);
+            border-radius: 15px;
+            border: 2px solid rgba(233, 69, 96, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-inline:hover {
+            transform: translateY(-5px);
+            border-color: rgba(233, 69, 96, 0.3);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.15);
+        }
+
+        .stat-inline-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-inline-label {
+            color: #666;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Learning Modules */
+        .module-timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 3rem auto;
+            padding-left: 2rem;
+        }
+
+        .module-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-light));
+            border-radius: 2px;
+        }
+
+        .module-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+            padding-left: 3rem;
+        }
+
+        .module-dot {
+            position: absolute;
+            left: -0.75rem;
+            top: 0;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.2);
+        }
+
+        .module-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .module-content:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(233, 69, 96, 0.15);
+        }
+
+        .module-title {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            font-size: 1.15rem;
+            margin-bottom: 0.8rem;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.08) 0%, rgba(255, 107, 129, 0.08) 100%);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border-left: 5px solid var(--accent);
+            margin: 2rem 0;
+        }
+
+        .info-box h3 {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            padding: 3.5rem 3rem;
+            border-radius: 25px;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.3);
+        }
+
+        .cta-section h2 {
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            background: none;
+            -webkit-text-fill-color: white;
+        }
+
+        .cta-section p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--accent);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255,255,255,0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            opacity: 0.9;
+        }
+
+        footer p:first-child {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .content-card {
+                padding: 2rem;
+            }
+
+            .benefits-grid,
+            .course-grid,
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-section {
+                padding: 2.5rem 2rem;
+            }
+
+            .logo-text {
+                font-size: 1.2rem;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo-container">
+                <div class="logo-text">FabricSense</div>
+            </a>
+            <a href="index.html" class="back-link">← Back to Home</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Revolutionary Educational Tool</h1>
+        <p>Empowering the next generation of fashion designers and textile professionals with AI-driven learning technology</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Introduction Card -->
+        <div class="content-card">
+            
+            <h2>Transforming Fashion & Textile Education</h2>
+            <p>
+                FabricSense is more than just a fabric identification tool—it's a comprehensive educational platform 
+                designed to revolutionize how fashion and textile students learn about fabrics, consumption planning, 
+                and sustainable design practices. By combining cutting-edge AI technology with pedagogical best practices, 
+                we've created a learning environment that bridges the gap between traditional textile education and 
+                modern industry requirements.
+            </p>
+            <p>
+                Our platform enables students to explore textile science through hands-on, interactive experiences that 
+                were previously impossible in traditional classroom settings. Instead of memorizing fabric characteristics 
+                from textbooks, students can now analyze real fabric samples instantly, understand consumption calculations 
+                through practical examples, and develop industry-relevant digital skills that prepare them for modern 
+                fashion careers.
+            </p>
+
+          
+        </div>
+
+        <!-- Learning Benefits -->
+        <div class="content-card">
+            <h2>Comprehensive Learning Benefits</h2>
+            <p>FabricSense provides unique educational advantages that enhance textile learning across multiple dimensions:</p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h3>Scientific Understanding</h3>
+                    <p>Learn textile science through data-driven analysis and AI-powered fabric identification that reveals fiber composition, weave structures, and material properties</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>Practical Experience</h3>
+                    <p>Gain hands-on experience with real-world fabric analysis and consumption calculations used in professional garment manufacturing</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>Data Literacy</h3>
+                    <p>Develop essential skills in interpreting AI-generated data, understanding confidence levels, and making informed design decisions</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>Sustainability Awareness</h3>
+                    <p>Foster eco-conscious design thinking through accurate consumption estimation that minimizes fabric waste and promotes responsible fashion</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>Digital Fluency</h3>
+                    <p>Master modern digital tools and AI technologies that are increasingly essential in contemporary fashion industry careers</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>Industry Readiness</h3>
+                    <p>Prepare for professional roles with skills directly applicable to fashion design, textile manufacturing, and quality control positions</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suitable Courses -->
+        <div class="content-card">
+            <h2>Perfect for These Educational Programs</h2>
+            <p>FabricSense integrates seamlessly into various fashion and textile education curricula:</p>
+            
+            <div class="course-grid">
+                <div class="course-card">
+                    <div class="course-header">
+                        <h4>Fashion Design</h4>
+                    </div>
+                    <ul class="course-list">
+                        <li>Fabric selection and analysis</li>
+                        <li>Garment design planning</li>
+                        <li>Material consumption studies</li>
+                        <li>Portfolio development</li>
+                        <li>Trend forecasting</li>
+                    </ul>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-header">
+                        <h4>Textile Engineering</h4>
+                    </div>
+                    <ul class="course-list">
+                        <li>Fiber identification labs</li>
+                        <li>Weave structure analysis</li>
+                        <li>Fabric properties testing</li>
+                        <li>Quality control methods</li>
+                        <li>Material science research</li>
+                    </ul>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-header">
+                        <h4>Pattern Making</h4>
+                    </div>
+                    <ul class="course-list">
+                        <li>Fabric consumption calculation</li>
+                        <li>Pattern layout optimization</li>
+                        <li>Marker efficiency studies</li>
+                        <li>Grading and sizing</li>
+                        <li>Production planning</li>
+                    </ul>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-header">
+                        <h4>Garment Technology</h4>
+                    </div>
+                    <ul class="course-list">
+                        <li>Manufacturing processes</li>
+                        <li>Production management</li>
+                        <li>Cost estimation</li>
+                        <li>Quality assurance</li>
+                        <li>Industrial methods</li>
+                    </ul>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-header">
+                        <h4>Sustainable Fashion</h4>
+                    </div>
+                    <ul class="course-list">
+                        <li>Eco-friendly material selection</li>
+                        <li>Waste reduction strategies</li>
+                        <li>Circular fashion principles</li>
+                        <li>Sustainable sourcing</li>
+                        <li>Environmental impact analysis</li>
+                    </ul>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-header">
+                        <h4>Fashion Merchandising</h4>
+                    </div>
+                    <ul class="course-list">
+                        <li>Product knowledge</li>
+                        <li>Fabric specifications</li>
+                        <li>Buyer education</li>
+                        <li>Inventory management</li>
+                        <li>Customer consultation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Modules -->
+        <div class="content-card">
+            <h2>Integrated Learning Modules</h2>
+            <p>Our structured curriculum guides students through progressive learning stages:</p>
+            
+            <div class="module-timeline">
+                <div class="module-item">
+                    <div class="module-dot"></div>
+                    <div class="module-content">
+                        <div class="module-title">Module 1: Introduction to AI in Fashion</div>
+                        <h3>Understanding Fabric Identification Technology</h3>
+                        <p>Learn how AI and machine learning work, understand CNN models, and explore the basics of digital textile analysis</p>
+                    </div>
+                </div>
+
+                <div class="module-item">
+                    <div class="module-dot"></div>
+                    <div class="module-content">
+                        <div class="module-title">Module 2: Textile Science Fundamentals</div>
+                        <h3>Fiber Types and Fabric Structures</h3>
+                        <p>Study natural and synthetic fibers, weave patterns, knit structures, and how to identify them using FabricSense</p>
+                    </div>
+                </div>
+
+                <div class="module-item">
+                    <div class="module-dot"></div>
+                    <div class="module-content">
+                        <div class="module-title">Module 3: Practical Identification Skills</div>
+                        <h3>Hands-On Fabric Analysis</h3>
+                        <p>Practice identifying 50+ fabric types, interpret AI confidence scores, and validate results with physical samples</p>
+                    </div>
+                </div>
+
+                <div class="module-item">
+                    <div class="module-dot"></div>
+                    <div class="module-content">
+                        <div class="module-title">Module 4: Consumption Calculation</div>
+                        <h3>Master Fabric Estimation Methods</h3>
+                        <p>Learn professional consumption formulas, understand marker efficiency, and plan garment production budgets</p>
+                    </div>
+                </div>
+
+                <div class="module-item">
+                    <div class="module-dot"></div>
+                    <div class="module-content">
+                        <div class="module-title">Module 5: Sustainable Design Practices</div>
+                        <h3>Minimizing Waste and Environmental Impact</h3>
+                        <p>Apply consumption estimation to reduce fabric waste, explore sustainable materials, and design responsibly</p>
+                    </div>
+                </div>
+
+                <div class="module-item">
+                    <div class="module-dot"></div>
+                    <div class="module-content">
+                        <div class="module-title">Module 6: Industry Applications</div>
+                        <h3>Real-World Project Work</h3>
+                        <p>Complete capstone projects simulating professional scenarios in design studios and manufacturing environments</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Educational Features -->
+        <div class="content-card">
+            <h2>Educational Features & Tools</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Interactive Assignments</h4>
+                        <p>Create and distribute fabric identification exercises with automated grading and instant feedback</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Progress Tracking</h4>
+                        <p>Monitor student learning with detailed analytics showing identification accuracy and improvement over time</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Instructor Dashboard</h4>
+                        <p>Manage classes, review student work, provide feedback, and customize learning paths for different skill levels</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Resource Library</h4>
+                        <p>Access comprehensive textile reference materials, video tutorials, and case studies from industry experts</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Gamified Learning</h4>
+                        <p>Earn achievements, compete in challenges, and unlock advanced features as students progress through modules</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Collaborative Projects</h4>
+                        <p>Work in teams on group assignments, share fabric analyses, and learn from peer feedback</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Mobile Learning</h4>
+                        <p>Access lessons and identify fabrics on-the-go with full mobile device compatibility</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Video Demonstrations</h4>
+                        <p>Learn through step-by-step video guides showing real-world applications and techniques</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Classroom Integration -->
+        <div class="content-card">
+            <h2>Seamless Classroom Integration</h2>
+            <div class="info-box">
+                <h3>Easy Implementation for Educators</h3>
+                <p>FabricSense is designed to complement existing curricula without disrupting established teaching methods:</p>
+                <ul style="margin-left: 2rem; margin-top: 1rem; color: #666; line-height: 2;">
+                    <li><strong>Quick Setup:</strong> Get started in minutes with simple account creation and class management</li>
+                    <li><strong>Flexible Integration:</strong> Use as a primary tool or supplement to traditional teaching methods</li>
+                    <li><strong>LMS Compatible:</strong> Integrates with Canvas, Blackboard, Moodle, and other learning platforms</li>
+                    <li><strong>Offline Capability:</strong> Download resources for use in areas with limited internet connectivity</li>
+                    <li><strong>Assessment Tools:</strong> Built-in quizzes, tests, and evaluation metrics aligned with learning objectives</li>
+                    <li><strong>Customizable Content:</strong> Adapt lessons and modules to match your specific curriculum requirements</li>
+                    <li><strong>Technical Support:</strong> Dedicated educator support team and comprehensive training materials</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Success Stories -->
+        <div class="content-card">
+            <h2>Student & Educator Success Stories</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Fashion Design Student - Emma Chen</h4>
+                        <p>"FabricSense helped me learn fabric identification in weeks instead of months. I can now confidently select materials for my designs and my grades have improved dramatically!"</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Textile Professor - Dr. James Anderson</h4>
+                        <p>"This tool has revolutionized my teaching. Students are more engaged, learn faster, and develop practical skills that prepare them for real careers. Highly recommended!"</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Institute Administrator - Priya Nair</h4>
+                        <p>"Integrating FabricSense into our textile curriculum was effortless. It has modernized our teaching methods and significantly improved student performance outcomes."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call To Action -->
+        <div class="cta-section">
+            <h2>Ready to Revolutionize Textile Education?</h2>
+            <p>Join hundreds of educators and students already transforming how fabrics are studied, analyzed, and understood.</p>
+            <div class="cta-buttons">
+                <a href="userSignup.html" class="btn btn-primary">Get Started</a>
+                <a href="contactPage.html" class="btn btn-secondary">Contact Us</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 FabricSense - AI-Based Fabric Identification & Consumption Estimation System</p>
+        <p>Developed by D.M. Chathurya Hiruni Gunathilaka | Cardiff Metropolitan University</p>
+    </footer>
+
+    <script>
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.content-card, .benefit-card, .course-card, .feature-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

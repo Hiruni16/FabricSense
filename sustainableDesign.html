@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainable Design - FabricSense</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --accent: #e94560;
+            --accent-light: #ff6b81;
+            --green: #43cea2;
+            --green-dark: #185a9d;
+            --text-dark: #333;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            color: var(--text-dark);
+            padding: 1.2rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .back-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .back-link:hover {
+            color: var(--accent-light);
+        }
+
+        .back-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(67, 206, 162, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(24, 90, 157, 0.1), transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 1.2s ease;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: -3rem auto 3rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.12);
+        }
+
+        .feature-img {
+            width: 100%;
+            max-height: 400px;
+            margin: 0 auto 2rem;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--green), var(--green-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 6rem;
+            box-shadow: 0 15px 40px rgba(67, 206, 162, 0.3);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 2rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        h3 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin: 1rem 0;
+            font-weight: 700;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        /* Impact Cards */
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .impact-card {
+            background: linear-gradient(135deg, rgba(67, 206, 162, 0.05) 0%, rgba(24, 90, 157, 0.05) 100%);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid rgba(67, 206, 162, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .impact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--green), var(--green-dark));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .impact-card:hover {
+            transform: translateY(-10px);
+            background: linear-gradient(135deg, rgba(67, 206, 162, 0.1) 0%, rgba(24, 90, 157, 0.1) 100%);
+            border-color: rgba(67, 206, 162, 0.3);
+            box-shadow: 0 15px 40px rgba(67, 206, 162, 0.2);
+        }
+
+        .impact-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .impact-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--green), var(--green-dark));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 20px rgba(67, 206, 162, 0.3);
+        }
+
+        /* Features List */
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, rgba(67, 206, 162, 0.05) 0%, rgba(24, 90, 157, 0.05) 100%);
+            padding: 1.8rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            border: 2px solid rgba(67, 206, 162, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-item:hover {
+            background: linear-gradient(135deg, rgba(67, 206, 162, 0.1) 0%, rgba(24, 90, 157, 0.1) 100%);
+            border-color: rgba(67, 206, 162, 0.3);
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(67, 206, 162, 0.15);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--green), var(--green-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(67, 206, 162, 0.3);
+        }
+
+        .feature-text {
+            flex: 1;
+        }
+
+        .feature-text h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .feature-text p {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Stats Section */
+        .stats-inline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-inline {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, rgba(67, 206, 162, 0.05) 0%, rgba(24, 90, 157, 0.05) 100%);
+            border-radius: 15px;
+            border: 2px solid rgba(67, 206, 162, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-inline:hover {
+            transform: translateY(-5px);
+            border-color: rgba(67, 206, 162, 0.3);
+            box-shadow: 0 10px 30px rgba(67, 206, 162, 0.15);
+        }
+
+        .stat-inline-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--green), var(--green-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-inline-label {
+            color: #666;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Lists */
+        ul {
+            margin: 1.5rem 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        ul li {
+            color: #666;
+            margin-bottom: 1.2rem;
+            line-height: 1.8;
+            padding-left: 2.5rem;
+            position: relative;
+        }
+
+        ul li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--green), var(--green-dark));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        ul li strong {
+            color: var(--green);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--green), var(--green-dark));
+            color: white;
+            padding: 3.5rem 3rem;
+            border-radius: 25px;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: 0 15px 40px rgba(67, 206, 162, 0.3);
+        }
+
+        .cta-section h2 {
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            background: none;
+            -webkit-text-fill-color: white;
+        }
+
+        .cta-section p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--green);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255,255,255,0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--green), var(--green-dark));
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            opacity: 0.9;
+        }
+
+        footer p:first-child {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .content-card {
+                padding: 2rem;
+            }
+
+            .impact-grid,
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-section {
+                padding: 2.5rem 2rem;
+            }
+
+            .logo-text {
+                font-size: 1.2rem;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo-container">
+                <div class="logo-text">FabricSense</div>
+            </a>
+            <a href="index.html" class="back-link">← Back to Home</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Sustainable Design Revolution</h1>
+        <p>Reducing textile waste through intelligent fabric management and AI-powered consumption prediction</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Introduction Card -->
+        <div class="content-card">
+            
+            <h2>Building a Greener Fashion Future</h2>
+            <p>
+                The fashion industry is one of the world's largest polluters, producing <strong>92 million tons of textile 
+                waste annually</strong>. FabricSense is pioneering a solution by providing AI-powered fabric consumption 
+                prediction that helps designers, manufacturers, and students reduce waste at the source.
+            </p>
+            <p>
+                Our technology empowers conscious design decisions that minimize environmental impact while maximizing 
+                creative potential. By accurately predicting fabric requirements and optimizing cutting layouts, we help 
+                the fashion industry take meaningful steps toward sustainability.
+            </p>
+
+          
+        </div>
+
+        <!-- Eco-Friendly Impact -->
+        <div class="content-card">
+            <h2>Eco-Friendly Impact</h2>
+            <p>FabricSense helps reduce wastage and promotes conscious fabric usage during the design process:</p>
+            
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <h3>Precision Prevents Waste</h3>
+                    <p>Accurate consumption calculations eliminate over-ordering and excess purchasing, reducing landfill-bound textile waste by up to 30% per project.</p>
+                </div>
+                <div class="impact-card">
+                    <h3>Water Conservation</h3>
+                    <p>Every meter of fabric saved preserves thousands of liters of water used in textile production and reduces water pollution from dyeing processes.</p>
+                </div>
+                <div class="impact-card">
+                    <h3>Carbon Footprint Reduction</h3>
+                    <p>Decreased fabric production means lower energy consumption and fewer greenhouse gas emissions from manufacturing and transportation.</p>
+                </div>
+                <div class="impact-card">
+                    <h3>Circular Economy Support</h3>
+                    <p>Smart consumption planning encourages designers to use fabric scraps creatively and plan for material reuse in future projects.</p>
+                </div>
+                <div class="impact-card">
+                    <h3>Data-Driven Decisions</h3>
+                    <p>Make informed choices about fabric purchases with accurate predictions that eliminate guesswork and unnecessary material orders.</p>
+                </div>
+                <div class="impact-card">
+                    <h3>Sustainable Education</h3>
+                    <p>Train the next generation of fashion professionals to think sustainably from day one with eco-conscious design practices.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Benefits -->
+        <div class="content-card">
+            <h2>Sustainability Benefits</h2>
+            <ul>
+                <li><strong>Prevents Unnecessary Fabric Purchases:</strong> Order exactly what you need, eliminating excess material that ends up in landfills</li>
+                <li><strong>Reduces Leftover and Unused Material:</strong> Optimize cutting layouts to maximize fabric utilization and minimize scraps</li>
+                <li><strong>Encourages Reuse and Smart Cutting Layouts:</strong> Plan designs that make efficient use of every centimeter of fabric</li>
+                <li><strong>Supports Green Fashion Initiatives:</strong> Align with global sustainability goals and circular economy principles</li>
+                <li><strong>Minimizes Chemical Usage:</strong> Less fabric production means fewer harmful dyes and chemicals released into ecosystems</li>
+                <li><strong>Conserves Natural Resources:</strong> Save water, energy, and raw materials used in textile manufacturing processes</li>
+                <li><strong>Reduces Transportation Emissions:</strong> Accurate predictions decrease shipping needs and associated carbon footprint</li>
+                <li><strong>Promotes Responsible Production:</strong> Make every design decision count for the planet with data-backed consumption planning</li>
+            </ul>
+        </div>
+
+        <!-- Why It Matters -->
+        <div class="content-card">
+            <h2>Why Sustainable Design Matters</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Global Fashion Crisis</h4>
+                        <p>The fashion industry produces 10% of global carbon emissions and is the second-largest consumer of water worldwide. Every sustainable choice matters.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Urgent Action Needed</h4>
+                        <p>With fast fashion accelerating waste production, immediate action is critical. FabricSense helps adopt sustainable practices today.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Collective Responsibility</h4>
+                        <p>From designers to manufacturers to consumers, everyone plays a role. Our platform empowers environmentally conscious decisions.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Aligns with Global Goals</h4>
+                        <p>Support UN Sustainable Development Goals and international efforts to reduce fashion industry environmental impact.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Economic Benefits</h4>
+                        <p>Environmental responsibility meets cost savings—reduce material waste while improving your bottom line.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Future-Proof Fashion</h4>
+                        <p>Companies embracing eco-friendly methods are positioned to thrive as regulations tighten and consumer awareness grows.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How We Help -->
+        <div class="content-card">
+            <h2>How FabricSense Promotes Sustainability</h2>
+            <p>Our platform integrates multiple features that work together to reduce environmental impact:</p>
+            
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>AI-Powered Identification</h4>
+                        <p>Accurately identify fabric types to choose sustainable materials and understand their environmental impact before purchase</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Precise Consumption Calculation</h4>
+                        <p>Calculate exact fabric requirements based on garment specifications, eliminating guesswork and over-purchasing</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Optimized Pattern Layouts</h4>
+                        <p>Maximize fabric utilization with smart pattern placement suggestions that minimize scraps and leftover materials</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Eco-Friendly Recommendations</h4>
+                        <p>Get insights on sustainable fabric alternatives that match your design requirements while reducing environmental impact</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Impact Tracking</h4>
+                        <p>Monitor your environmental savings with detailed reports showing fabric saved, water conserved, and emissions prevented</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Educational Resources</h4>
+                        <p>Learn sustainable design practices through integrated tutorials, case studies, and best practice guidelines</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2>Join the Sustainable Fashion Movement</h2>
+            <p>Make every design decision count for the planet. Start reducing your environmental impact today.</p>
+            <div class="cta-buttons">
+                <a href="userSignup.html" class="btn btn-primary">Get Started Free</a>
+                <a href="index.html#how-it-works" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 FabricSense - AI-Based Fabric Identification & Consumption Estimation System</p>
+        <p>Committed to environmental responsibility and sustainable fashion</p>
+    </footer>
+
+    <script>
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.content-card, .impact-card, .feature-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

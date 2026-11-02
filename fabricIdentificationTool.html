@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric Identification Tool - FabricSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --accent: #e94560;
+            --accent-light: #ff6b81;
+            --text-dark: #333;
+            --bg-light: #f8f9fa;
+            --success: #4caf50;
+            --warning: #ff9800;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        /* Upload Section */
+        .upload-area {
+            border: 3px dashed #ddd;
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--accent);
+            background: rgba(233, 69, 96, 0.05);
+        }
+
+        .upload-area.has-image {
+            padding: 1rem;
+            border-style: solid;
+            border-color: var(--success);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .upload-subtext {
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        #imagePreview {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            display: none;
+            margin: 0 auto;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: var(--text-dark);
+            margin-top: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* Results Section */
+        .results {
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, var(--success), #66bb6a);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .result-header h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .confidence-bar {
+            background: rgba(255, 255, 255, 0.3);
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: width 1s ease;
+        }
+
+        .result-section {
+            margin-bottom: 2rem;
+        }
+
+        .result-section h4 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .property-item {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.05), rgba(255, 107, 129, 0.05));
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .property-item strong {
+            display: block;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .properties-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .property-tag {
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .care-list, .best-for-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .care-list li, .best-for-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .care-list li:last-child, .best-for-list li:last-child {
+            border-bottom: none;
+        }
+
+        .alternatives-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .alternative-item {
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .alternative-item .fabric-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .alternative-item .confidence {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* Loading State */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Info tooltip */
+        .info-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            font-size: 0.8rem;
+            cursor: help;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="loginHomePage.html" class="back-link">← Back to Home</a>
+            <h1>🔍 AI Fabric Identification</h1>
+            <p>Upload a fabric image and get instant identification with detailed analysis</p>
+        </div>
+
+        <div class="main-grid">
+            <!-- Upload & Options Section -->
+            <div class="card">
+                <h2>Upload Fabric Image</h2>
+                
+                <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                    <div id="uploadPrompt">
+                        <div class="upload-icon">📸</div>
+                        <div class="upload-text">Click to upload or drag & drop</div>
+                        <div class="upload-subtext">Supports: JPG, PNG, JPEG (Max 5MB)</div>
+                    </div>
+                    <img id="imagePreview" alt="Preview">
+                </div>
+                
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/jpg">
+                
+                <div class="form-group">
+                    <label for="purpose">What will you use this fabric for? (Optional)</label>
+                    <select id="purpose">
+                        <option value="">-- Select Purpose --</option>
+                        <option value="clothing">General Clothing</option>
+                        <option value="formal">Formal Wear / Evening Dress</option>
+                        <option value="casual">Casual Everyday Wear</option>
+                        <option value="active">Activewear / Sportswear</option>
+                        <option value="outerwear">Outerwear / Jackets</option>
+                        <option value="underwear">Underwear / Lingerie</option>
+                        <option value="home">Home Textiles / Upholstery</option>
+                        <option value="accessories">Accessories / Scarves</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Information to Include:</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="showAlternatives" checked>
+                            <label for="showAlternatives">Show alternative fabric predictions</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="includeCare" checked>
+                            <label for="includeCare">Include care instructions</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="includeSustainability">
+                            <label for="includeSustainability">Include sustainability info</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="identifyBtn" disabled>
+                    🔍 Identify Fabric
+                </button>
+
+                <button class="btn btn-secondary" id="resetBtn" style="display: none;">
+                    🔄 Upload Another Image
+                </button>
+            </div>
+
+            <!-- Results Section -->
+            <div class="card">
+                <h2>Identification Results</h2>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing fabric... Please wait</p>
+                </div>
+
+                <div id="results" class="results">
+                    <div class="result-header">
+                        <h3 id="fabricType">Cotton</h3>
+                        <p>Confidence Level</p>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" id="confidenceFill" style="width: 0%">
+                                <span id="confidenceText">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Properties -->
+                    <div class="result-section" id="mainPropertiesSection">
+                        <h4>📋 Fabric Properties</h4>
+                        <div class="properties-grid">
+                            <div class="property-item">
+                                <strong>Composition</strong>
+                                <span id="composition">-</span>
+                            </div>
+                            <div class="property-item">
+                                <strong>Texture</strong>
+                                <span id="texture">-</span>
+                            </div>
+                            <div class="property-item">
+                                <strong>Weight</strong>
+                                <span id="weight">-</span>
+                            </div>
+                            <div class="property-item">
+                                <strong>Price Range</strong>
+                                <span id="priceRange">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Characteristics -->
+                    <div class="result-section" id="characteristicsSection">
+                        <h4>✨ Key Characteristics</h4>
+                        <div class="properties-list" id="propertiesList"></div>
+                    </div>
+
+                    <!-- Best For -->
+                    <div class="result-section" id="bestForSection">
+                        <h4>👔 Best Used For</h4>
+                        <ul class="best-for-list" id="bestForList"></ul>
+                    </div>
+
+                    <!-- Seasons -->
+                    <div class="result-section" id="seasonsSection">
+                        <h4>🌡️ Suitable Seasons</h4>
+                        <div class="properties-list" id="seasonsList"></div>
+                    </div>
+
+                    <!-- Care Instructions -->
+                    <div class="result-section" id="careSection" style="display: none;">
+                        <h4>🧺 Care Instructions</h4>
+                        <ul class="care-list" id="careList"></ul>
+                    </div>
+
+                    <!-- Sustainability -->
+                    <div class="result-section" id="sustainabilitySection" style="display: none;">
+                        <h4>♻️ Sustainability Information</h4>
+                        <p id="sustainabilityText"></p>
+                    </div>
+
+                    <!-- Purpose Recommendation -->
+                    <div class="result-section" id="recommendationSection" style="display: none;">
+                        <h4>💡 Recommendation for Your Purpose</h4>
+                        <div class="property-item">
+                            <span id="recommendationText"></span>
+                        </div>
+                    </div>
+
+                    <!-- Alternatives -->
+                    <div class="result-section" id="alternativesSection" style="display: none;">
+                        <h4>🔄 Alternative Predictions</h4>
+                        <div class="alternatives-grid" id="alternativesList"></div>
+                    </div>
+                </div>
+
+                <div id="noResults" style="text-align: center; padding: 3rem; color: #999;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
+                    <p>Upload an image to see identification results</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        const API_URLS = [
+            'http://localhost/FabricSense/fabricIdentificationProxy.php',
+            'http://127.0.0.1:5001/identify',
+            'http://localhost:5001/identify'
+        ];
+
+        class ApiRequestError extends Error {
+            constructor(message, details = null, isNetworkError = false, status = null, url = null) {
+                super(message);
+                this.details = details;
+                this.isNetworkError = isNetworkError;
+                this.status = status;
+                this.url = url;
+            }
+        }
+
+        async function parseApiResponse(response) {
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                return await response.json();
+            }
+
+            const text = await response.text();
+            throw new ApiRequestError(
+                'Fabric API returned an invalid response format.',
+                text,
+                false
+            );
+        }
+
+        // check whether API is reachable via proxy; disables identify if not
+        async function checkApiAvailable() {
+            try {
+                // use OPTIONS to ping the proxy first – it should return 204 quickly if PHP/Apache is working
+                const resp = await fetch(API_URLS[0], { method: 'OPTIONS' });
+                if (!resp.ok) throw new Error(`status ${resp.status}`);
+                // proxy is up; we don't check the python service here because the proxy will start it on demand.
+            } catch (err) {
+                console.warn('Proxy or API unavailable:', err);
+                const identifyBtn = document.getElementById('identifyBtn');
+                identifyBtn.disabled = true;
+                alert(
+                    '⚠️ Unable to reach the Fabric Identification proxy.\\n'
+                    + 'Ensure your web server (Apache/XAMPP) is running and that the project URL matches.\\n'
+                    + 'If the proxy is accessible but the Python service is not yet running, start it with start_services.ps1.'
+                );
+            }
+        }
+
+        // run availability check after DOM loaded
+        window.addEventListener('load', checkApiAvailable);
+
+        async function requestFabricIdentification(formData) {
+            let lastError = null;
+
+            for (const apiUrl of API_URLS) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await parseApiResponse(response);
+
+                    if (!response.ok) {
+                        const message = data?.message || data?.error || `Request failed with status ${response.status}`;
+                        throw new ApiRequestError(message, data, false, response.status, apiUrl);
+                    }
+
+                    return data;
+                } catch (error) {
+                    const isNetworkError = error instanceof TypeError;
+                    if (isNetworkError) {
+                        // include the URL we tried to reach so caller can distinguish proxy vs direct API
+                        lastError = new ApiRequestError(
+                            'Network error while contacting Fabric Identification API.',
+                            error.message,
+                            true,
+                            null,
+                            apiUrl
+                        );
+                    } else if (error instanceof ApiRequestError) {
+                        lastError = error;
+                        const isTemporaryUnavailable = error.status === 502 || error.status === 503 || error.status === 504;
+                        if (!error.isNetworkError && !isTemporaryUnavailable) {
+                            throw error;
+                        }
+                    } else {
+                        lastError = new ApiRequestError('Unexpected error while processing API response.', error?.message || null, false, null, apiUrl);
+                        throw lastError;
+                    }
+                }
+            }
+
+            throw lastError || new ApiRequestError('Unable to connect to Fabric Identification API.', null, true);
+        }
+
+        // File input handling
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const imagePreview = document.getElementById('imagePreview');
+        const uploadPrompt = document.getElementById('uploadPrompt');
+        const identifyBtn = document.getElementById('identifyBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        fileInput.addEventListener('change', handleFileSelect);
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    return;
+                }
+                if (!file.type.match('image/(jpeg|png|jpg)')) {
+                    alert('Please upload a valid image file (JPG, PNG)');
+                    return;
+                }
+                selectedFile = file;
+                displayImagePreview(file);
+                identifyBtn.disabled = false;
+                resetBtn.style.display = 'block';
+            }
+        }
+
+        function displayImagePreview(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+                uploadPrompt.style.display = 'none';
+                uploadArea.classList.add('has-image');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect({ target: { files: [file] } });
+            }
+        });
+
+        // Reset button
+        resetBtn.addEventListener('click', () => {
+            selectedFile = null;
+            fileInput.value = '';
+            imagePreview.style.display = 'none';
+            imagePreview.src = '';
+            uploadPrompt.style.display = 'block';
+            uploadArea.classList.remove('has-image');
+            identifyBtn.disabled = true;
+            resetBtn.style.display = 'none';
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('noResults').style.display = 'block';
+        });
+
+        // Identify fabric
+        identifyBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('noResults').style.display = 'none';
+
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('image', selectedFile);
+            formData.append('purpose', document.getElementById('purpose').value);
+            formData.append('show_alternatives', document.getElementById('showAlternatives').checked);
+            formData.append('include_care', document.getElementById('includeCare').checked);
+            formData.append('include_sustainability', document.getElementById('includeSustainability').checked);
+
+            try {
+                const data = await requestFabricIdentification(formData);
+
+                if (data.success) {
+                    displayResults(data);
+                    
+                    // Save identification to database
+                    await saveIdentificationToDatabase(data);
+                } else {
+                    // Handle "not a fabric" error
+                    let message = data.message;
+                    if (data.detected_as) {
+                        message += `\n\n(Model detected: ${data.detected_as} with ${data.confidence}% confidence, but this is below our 85% threshold)`;
+                    }
+                    alert('❌ ' + message + '\n\n💡 ' + (data.suggestion || ''));
+                    document.getElementById('noResults').style.display = 'block';
+                    document.getElementById('noResults').innerHTML = `
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">🚫</div>
+                        <h3 style="color: #e94560; margin-bottom: 1rem;">Cannot Identify Fabric</h3>
+                        <p style="color: #666;">${data.message}</p>
+                        ${data.detected_as ? `<p style="color: #999; margin-top: 1rem; font-size: 0.9rem;">Detected as: <strong>${data.detected_as}</strong> (${data.confidence}% confidence)</p>` : ''}
+                        <p style="color: #999; margin-top: 0.5rem; font-size: 0.9rem;"><strong>Required:</strong> 99% confidence minimum</p>
+                        <p style="color: #ff9800; margin-top: 0.5rem; font-size: 0.85rem;"><strong>⚠️ Note:</strong> This model is heavily trained on specific dataset images and requires very high confidence to avoid false positives.</p>
+                        <p style="color: #666; margin-top: 1rem;"><strong>Tip:</strong> ${data.suggestion}</p>
+                    `;
+                }
+            } catch (error) {
+                if (error?.isNetworkError) {
+                    // network failures can occur on the proxy (Apache) or the python API
+                    if (error.url && error.url.includes('fabricIdentificationProxy.php')) {
+                        alert('⚠️ Unable to reach the PHP proxy.  Make sure your web server (Apache/XAMPP) is running and that the project is accessible at the correct URL.');
+                    } else {
+                        alert('Failed to connect to the Fabric Identification API. Please start the API on port 5001 (run start_services.ps1) and try again.');
+                    }
+                } else {
+                    const detailedMessage = error?.message || 'Fabric Identification request failed.';
+                    const suggestion = error?.details?.suggestion ? ('\n\n' + error.details.suggestion) : '';
+                    alert('❌ ' + detailedMessage + suggestion + '\n\nPlease try again with a clearer fabric image.');
+                }
+                console.error('Error:', error);
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+            }
+        });
+
+        function displayResults(data) {
+            // Show results section
+            document.getElementById('results').classList.add('show');
+            document.getElementById('noResults').style.display = 'none';
+
+            // Fabric type and confidence
+            document.getElementById('fabricType').textContent = data.fabric_type;
+            const confidenceFill = document.getElementById('confidenceFill');
+            const confidenceText = document.getElementById('confidenceText');
+            
+            // Show warning if present
+            if (data.warning) {
+                alert('⚠️ ' + data.warning);
+            }
+            
+            setTimeout(() => {
+                confidenceFill.style.width = data.confidence + '%';
+                confidenceText.textContent = data.confidence + '%';
+            }, 100);
+
+            // Main properties
+            const props = data.properties;
+            document.getElementById('composition').textContent = props.composition;
+            document.getElementById('texture').textContent = props.texture;
+            document.getElementById('weight').textContent = props.weight;
+            document.getElementById('priceRange').textContent = props.price_range;
+
+            // Characteristics
+            const propertiesList = document.getElementById('propertiesList');
+            propertiesList.innerHTML = '';
+            props.properties.forEach(prop => {
+                const tag = document.createElement('span');
+                tag.className = 'property-tag';
+                tag.textContent = prop;
+                propertiesList.appendChild(tag);
+            });
+
+            // Best for
+            const bestForList = document.getElementById('bestForList');
+            bestForList.innerHTML = '';
+            props.best_for.forEach(use => {
+                const li = document.createElement('li');
+                li.innerHTML = `✓ ${use}`;
+                bestForList.appendChild(li);
+            });
+
+            // Seasons
+            const seasonsList = document.getElementById('seasonsList');
+            seasonsList.innerHTML = '';
+            props.seasons.forEach(season => {
+                const tag = document.createElement('span');
+                tag.className = 'property-tag';
+                tag.textContent = season;
+                seasonsList.appendChild(tag);
+            });
+
+            // Care instructions
+            if (props.care) {
+                document.getElementById('careSection').style.display = 'block';
+                const careList = document.getElementById('careList');
+                careList.innerHTML = '';
+                props.care.forEach(instruction => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `🧺 ${instruction}`;
+                    careList.appendChild(li);
+                });
+            } else {
+                document.getElementById('careSection').style.display = 'none';
+            }
+
+            // Sustainability
+            if (props.sustainability) {
+                document.getElementById('sustainabilitySection').style.display = 'block';
+                document.getElementById('sustainabilityText').textContent = props.sustainability;
+            } else {
+                document.getElementById('sustainabilitySection').style.display = 'none';
+            }
+
+            // Recommendation
+            if (data.recommendation) {
+                document.getElementById('recommendationSection').style.display = 'block';
+                document.getElementById('recommendationText').textContent = data.recommendation;
+            } else {
+                document.getElementById('recommendationSection').style.display = 'none';
+            }
+
+            // Alternatives
+            if (data.alternatives) {
+                document.getElementById('alternativesSection').style.display = 'block';
+                const alternativesList = document.getElementById('alternativesList');
+                alternativesList.innerHTML = '';
+                data.alternatives.forEach((alt, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'alternative-item';
+                    div.innerHTML = `
+                        <span class="fabric-name">${index + 1}. ${alt.fabric_type}</span>
+                        <span class="confidence">${alt.confidence}%</span>
+                    `;
+                    alternativesList.appendChild(div);
+                });
+            } else {
+                document.getElementById('alternativesSection').style.display = 'none';
+            }
+
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Save identification to database
+        async function saveIdentificationToDatabase(identificationData) {
+            try {
+                // Get image information
+                const imageFilename = selectedFile ? selectedFile.name : null;
+                const imageSizeKb = selectedFile ? Math.round(selectedFile.size / 1024) : null;
+                
+                // Prepare data to save
+                const saveData = {
+                    fabric_type: identificationData.fabric_type,
+                    confidence: identificationData.confidence,
+                    purpose: document.getElementById('purpose').value || null,
+                    show_alternatives: document.getElementById('showAlternatives').checked,
+                    include_care: document.getElementById('includeCare').checked,
+                    include_sustainability: document.getElementById('includeSustainability').checked,
+                    alternatives: identificationData.alternatives || [],
+                    image_filename: imageFilename,
+                    image_size_kb: imageSizeKb,
+                    texture_validation: identificationData.texture_validation || {}
+                };
+                
+                // Send to PHP backend
+                const response = await fetch('saveFabricIdentification.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(saveData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log('✅ Identification saved to database:', result);
+                } else {
+                    console.warn('⚠️ Could not save identification:', result.message);
+                }
+            } catch (error) {
+                console.error('Error saving identification to database:', error);
+            }
+        }
+    </script>
+</body>
+</html>

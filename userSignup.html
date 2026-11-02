@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - FabricSense</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --accent: #e94560;
+            --accent-light: #ff6b81;
+            --text-dark: #333;
+        }
+
+        /* ✅ FIXED BODY (SCROLL ENABLED) */
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow-y: auto;   /* ✅ FIX */
+        }
+
+        /* Background glow */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(233, 69, 96, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 107, 129, 0.1), transparent 50%);
+            pointer-events: none;
+        }
+
+        /* Decorative circles */
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            background: rgba(233, 69, 96, 0.1);
+            animation: float 20s linear infinite;
+        }
+
+        .circle1 { width: 120px; height: 120px; top: 5%; left: 5%; }
+        .circle2 { width: 150px; height: 150px; top: 50%; right: 5%; animation-delay: -7s; }
+        .circle3 { width: 90px; height: 90px; bottom: 10%; left: 20%; animation-delay: -14s; }
+
+        @keyframes float {
+            0%,100% { transform: translate(0,0); }
+            50% { transform: translate(20px,-30px); }
+        }
+
+        .signup-container {
+            background: rgba(255,255,255,0.98);
+            padding: 3rem;
+            border-radius: 30px;
+            max-width: 550px;
+            width: 100%;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            z-index: 2;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: .8rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #fff;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            margin-bottom: .3rem;
+        }
+
+        .logo-section p {
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 1.4rem;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: .4rem;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 2px solid #e1e8ed;
+            font-size: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(233,69,96,.15);
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.05) 0%, rgba(255, 107, 129, 0.05) 100%);
+            border-radius: 15px;
+            border: 2px solid rgba(233, 69, 96, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .terms-checkbox:hover {
+            border-color: rgba(233, 69, 96, 0.3);
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.08) 0%, rgba(255, 107, 129, 0.08) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.1);
+        }
+
+        .terms-checkbox input[type="checkbox"] {
+            margin-top: 0.15rem;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            accent-color: var(--accent);
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .terms-checkbox input[type="checkbox"]:checked {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+        }
+
+        .terms-checkbox label {
+            font-size: 0.95rem;
+            color: #555;
+            font-weight: 500;
+            line-height: 1.6;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .terms-checkbox a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .terms-checkbox a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .terms-checkbox a:hover {
+            color: var(--accent-light);
+        }
+
+        .terms-checkbox a:hover::after {
+            width: 100%;
+        }
+
+        .signup-btn {
+            width: 100%;
+            padding: 1.2rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(233,69,96,.3);
+        }
+
+        .signup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(233,69,96,.45);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.8rem 0;
+            color: #999;
+        }
+
+        .login-link, .back-home {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .login-link a, .back-home a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .signup-container {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="decorative-circle circle1"></div>
+    <div class="decorative-circle circle2"></div>
+    <div class="decorative-circle circle3"></div>
+
+    <div class="signup-container">
+        <div class="logo-section">
+            <div class="logo-container">
+                <div class="logo-text">FabricSense</div>
+            </div>
+            <h1>Create Account</h1>
+            <p>Join FabricSense and start your fabric journey</p>
+        </div>
+
+        <form id="signupForm">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="full_name" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" placeholder="your.email@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Create a strong password" required>
+            </div>
+
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" name="confirmPassword" placeholder="Re-enter your password" required>
+            </div>
+
+           <div class="terms-checkbox">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">
+                    I agree to the <a href="#" onclick="event.preventDefault();">Terms of Service</a> and <a href="#" onclick="event.preventDefault();">Privacy Policy</a>
+                </label>
+            </div>
+
+            <button class="signup-btn">Create Account</button>
+        </form>
+
+        <div class="divider">or</div>
+
+        <div class="login-link">
+            Already have an account? <a href="userLogin.html">Log in</a>
+        </div>
+
+        <div class="back-home">
+            <a href="index.html">← Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById("signupForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    fetch("register.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+
+        if (data.status === "success") {
+            window.location.href = "userLogin.html";
+        }
+    })
+    .catch(err => {
+        alert("Something went wrong!");
+        console.error(err);
+    });
+});
+</script>
+
+
+</body>
+</html>

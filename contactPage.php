@@ -1,0 +1,833 @@
+<?php
+session_start();
+
+// Check if user is logged in
+$isLoggedIn = isset($_SESSION['user_id']);
+$userName = $isLoggedIn ? $_SESSION['user_name'] : '';
+$userEmail = $isLoggedIn ? $_SESSION['user_email'] : '';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - FabricSense</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --accent: #e94560;
+            --accent-light: #ff6b81;
+            --text-dark: #333;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            color: var(--text-dark);
+            padding: 1.2rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 0.55rem 1.3rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            color: var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(233, 69, 96, 0.08);
+            border-color: rgba(233, 69, 96, 0.6);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 6px 16px rgba(233, 69, 96, 0.25);
+        }
+
+        .nav-btn.primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(233, 69, 96, 0.35);
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Contact Hero */
+        .contact-hero {
+            margin-top: 80px;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            padding: 6rem 2rem 8rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(233, 69, 96, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 107, 129, 0.1), transparent 50%);
+            pointer-events: none;
+        }
+
+        .contact-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-hero p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+            animation: fadeInUp 1.2s ease;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            max-width: 1200px;
+            margin: -6rem auto 4rem;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 3rem;
+            animation: fadeInUp 1.4s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Contact Info */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .info-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(233, 69, 96, 0.15);
+        }
+
+        .info-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .info-icon {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.3);
+        }
+
+        .info-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: var(--primary);
+        }
+
+        .info-card p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .info-card a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            display: inline-block;
+        }
+
+        .info-card a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .info-card a:hover {
+            color: var(--accent-light);
+        }
+
+        .info-card a:hover::after {
+            width: 100%;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.2rem;
+        }
+
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 1.3rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.2);
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        /* Contact Form */
+        .contact-form-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .contact-form-container:hover {
+            box-shadow: 0 15px 50px rgba(0,0,0,0.12);
+        }
+
+        .contact-form-container h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            background: #f8f9fa;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            color: var(--text-dark);
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(233,69,96,.15);
+        }
+
+        .form-group input:disabled,
+        .form-group textarea:disabled,
+        .form-group select:disabled {
+            background: #e9ecef;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.2rem 2rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(233,69,96,.3);
+            margin-top: 0.5rem;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(233,69,96,.45);
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Messages */
+        .success-message, .error-message {
+            display: none;
+            padding: 1.2rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.1) 0%, rgba(46, 204, 113, 0.1) 100%);
+            border: 2px solid rgba(39, 174, 96, 0.3);
+            color: #27ae60;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(192, 57, 43, 0.1) 100%);
+            border: 2px solid rgba(192, 57, 43, 0.3);
+            color: #c0392b;
+        }
+
+        .success-message.show, .error-message.show {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .login-prompt {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
+            border: 2px solid rgba(255, 193, 7, 0.3);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .login-prompt h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .login-prompt p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            opacity: 0.9;
+        }
+
+        footer p:first-child {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .contact-section {
+                grid-template-columns: 1fr;
+                margin-top: -3rem;
+            }
+
+            .contact-hero {
+                padding: 5rem 2rem 6rem;
+            }
+
+            .contact-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .contact-hero p {
+                font-size: 1.1rem;
+            }
+
+            .contact-form-container {
+                padding: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .contact-hero h1 {
+                font-size: 2rem;
+            }
+
+            nav ul {
+                gap: 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .contact-form-container h2 {
+                font-size: 1.8rem;
+            }
+
+            .contact-form-container {
+                padding: 2rem;
+            }
+
+            .info-card {
+                padding: 2rem;
+            }
+
+            .logo-text {
+                font-size: 1.2rem;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            nav ul {
+                display: none;
+            }
+
+            .nav-actions {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo-container">
+                <div class="logo-text">FabricSense</div>
+            </a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="index.html#how-it-works">How It Works</a></li>
+                <li><a href="aboutPage.html">About</a></li>
+                <li><a href="contactPage.php">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a class="nav-btn" href="userLogin.html">LOGIN</a>
+                <a class="nav-btn primary" href="userSignup.html">SIGN UP</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contact Hero -->
+    <section class="contact-hero">
+        <h1>Get In Touch</h1>
+        <p>Have questions about FabricSense? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <!-- Contact Info -->
+        <div class="contact-info">
+            <div class="info-card">
+                <h3>Email Us</h3>
+                <p>For general inquiries and support</p>
+                <a href="mailto:fabricsense@example.com">fabricsense@example.com</a>
+            </div>
+
+            <div class="info-card">
+                <h3>Call Us</h3>
+                <p>Available Mon-Fri, 9AM-6PM</p>
+                <a href="tel:+94112345678">+94 11 234 5678</a>
+            </div>
+
+            <div class="info-card">
+                <h3>Visit Us</h3>
+                <p>57/2,<br>
+                Fabric Sense,<br>
+                Colombo, Sri Lanka</p>
+            </div>
+
+        
+        </div>
+
+        <!-- Contact Form -->
+        <div class="contact-form-container">
+            <h2>Send Us a Message</h2>
+            
+            <div class="success-message" id="successMessage">
+                ✓ Thank you! Your message has been sent successfully. We'll get back to you soon.
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                ❌ Please log in to send a message. Only registered users can contact us.
+            </div>
+            
+            <?php if ($isLoggedIn): ?>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" required value="<?php echo htmlspecialchars($userName); ?>" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($userEmail); ?>" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+94 XX XXX XXXX">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject *</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Select a subject</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="support">Technical Support</option>
+                            <option value="feedback">Feedback</option>
+                            <option value="partnership">Partnership</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" name="message" required placeholder="Tell us how we can help you..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            <?php else: ?>
+                <div class="login-prompt">
+                    <h3>🔒 Authentication Required</h3>
+                    <p>You must be logged in to send us a message. Please log in or create an account to continue.</p>
+                    <a href="userLogin.html" class="login-btn">Log In / Sign Up</a>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 FabricSense - AI-Based Fabric Identification & Consumption Estimation System</p>
+        <p>Developed by D.M. Chathurya Hiruni Gunathilaka | Cardiff Metropolitan University</p>
+    </footer>
+
+    <script>
+        const isLoggedIn = <?php echo $isLoggedIn ? 'true' : 'false'; ?>;
+
+        // Form submission handler
+        if (isLoggedIn) {
+            document.getElementById('contactForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                
+                // Send data to backend
+                fetch('submitContact.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Server response:', data); // Debug log
+                    
+                    if (data.status === 'success') {
+                        // Show success message
+                        const successMessage = document.getElementById('successMessage');
+                        const errorMessage = document.getElementById('errorMessage');
+                        
+                        errorMessage.classList.remove('show');
+                        successMessage.classList.add('show');
+                        
+                        // Scroll to success message
+                        successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        
+                        // Reset form (except name and email)
+                        document.getElementById('phone').value = '';
+                        document.getElementById('subject').value = '';
+                        document.getElementById('message').value = '';
+                        
+                        // Hide success message after 5 seconds
+                        setTimeout(() => {
+                            successMessage.classList.remove('show');
+                        }, 5000);
+                    } else {
+                        // Show error message
+                        const errorMessage = document.getElementById('errorMessage');
+                        const successMessage = document.getElementById('successMessage');
+                        
+                        successMessage.classList.remove('show');
+                        errorMessage.textContent = '❌ ' + (data.message || 'Error sending message');
+                        errorMessage.classList.add('show');
+                        
+                        // Hide error message after 8 seconds
+                        setTimeout(() => {
+                            errorMessage.classList.remove('show');
+                        }, 8000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const errorMessage = document.getElementById('errorMessage');
+                    errorMessage.textContent = '❌ Network error. Please try again.';
+                    errorMessage.classList.add('show');
+                });
+            });
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.info-card, .contact-form-container').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

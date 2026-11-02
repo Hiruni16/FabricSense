@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fabric Identification - FabricSense</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --accent: #e94560;
+            --accent-light: #ff6b81;
+            --text-dark: #333;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            color: var(--text-dark);
+            padding: 1.2rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .back-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .back-link:hover {
+            color: var(--accent-light);
+        }
+
+        .back-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(233, 69, 96, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 107, 129, 0.1), transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 1.2s ease;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: -3rem auto 3rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.12);
+        }
+
+        .feature-img {
+            width: 100%;
+            max-height: 400px;
+            margin: 0 auto 2rem;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 6rem;
+            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.3);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 2rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        h3 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin: 1rem 0;
+            font-weight: 700;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        /* Process Steps */
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .process-card {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.05) 0%, rgba(255, 107, 129, 0.05) 100%);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid rgba(233, 69, 96, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .process-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .process-card:hover {
+            transform: translateY(-10px);
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.1) 0%, rgba(255, 107, 129, 0.1) 100%);
+            border-color: rgba(233, 69, 96, 0.3);
+            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.2);
+        }
+
+        .process-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .process-number {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.3);
+        }
+
+        /* Features List */
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.05) 0%, rgba(255, 107, 129, 0.05) 100%);
+            padding: 1.8rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            border: 2px solid rgba(233, 69, 96, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-item:hover {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.1) 0%, rgba(255, 107, 129, 0.1) 100%);
+            border-color: rgba(233, 69, 96, 0.3);
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(233, 69, 96, 0.15);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+        }
+
+        .feature-text {
+            flex: 1;
+        }
+
+        .feature-text h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .feature-text p {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* Fabric Types Grid */
+        .fabric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .fabric-card {
+            background: white;
+            padding: 2rem 1.5rem;
+            border-radius: 15px;
+            border: 2px solid #e1e8ed;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fabric-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.2);
+            transform: translateY(-8px);
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.02) 0%, rgba(255, 107, 129, 0.02) 100%);
+        }
+
+        .fabric-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .fabric-card h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .fabric-card p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Stats Section */
+        .stats-inline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-inline {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.05) 0%, rgba(255, 107, 129, 0.05) 100%);
+            border-radius: 15px;
+            border: 2px solid rgba(233, 69, 96, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-inline:hover {
+            transform: translateY(-5px);
+            border-color: rgba(233, 69, 96, 0.3);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.15);
+        }
+
+        .stat-inline-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-inline-label {
+            color: #666;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            padding: 3.5rem 3rem;
+            border-radius: 25px;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: 0 15px 40px rgba(233, 69, 96, 0.3);
+        }
+
+        .cta-section h2 {
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            background: none;
+            -webkit-text-fill-color: white;
+        }
+
+        .cta-section p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1.2rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--accent);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255,255,255,0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            opacity: 0.9;
+        }
+
+        footer p:first-child {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .content-card {
+                padding: 2rem;
+            }
+
+            .process-grid,
+            .features-list,
+            .fabric-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-section {
+                padding: 2.5rem 2rem;
+            }
+
+            .logo-text {
+                font-size: 1.2rem;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo-container">
+                <div class="logo-text">FabricSense</div>
+            </a>
+            <a href="index.html" class="back-link">← Back to Home</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>AI-Powered Fabric Identification</h1>
+        <p>Advanced machine learning technology that identifies fabric types with 95% accuracy using image analysis and deep learning algorithms</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Introduction Card -->
+        <div class="content-card">
+            
+            <h2>What is AI Fabric Identification?</h2>
+            <p>
+                FabricSense leverages cutting-edge artificial intelligence to revolutionize fabric identification. 
+                Our system uses a sophisticated Convolutional Neural Network (CNN) trained on thousands of fabric 
+                samples to accurately identify and classify textile materials from simple photographs.
+            </p>
+            <p>
+                The AI analyzes multiple fabric characteristics including texture patterns, weave structures, 
+                fiber density, surface finish, color variations, and material composition to provide instant, 
+                accurate identification results. This technology eliminates the need for manual testing and 
+                brings laboratory-level precision to your fingertips.
+            </p>
+
+            <!-- Stats -->
+            <div class="stats-inline">
+                <div class="stat-inline">
+                    <div class="stat-inline-number">95%</div>
+                    <div class="stat-inline-label">Accuracy Rate</div>
+                </div>
+                <div class="stat-inline">
+                    <div class="stat-inline-number">50+</div>
+                    <div class="stat-inline-label">Fabric Types</div>
+                </div>
+                <div class="stat-inline">
+                    <div class="stat-inline-number">&lt;2s</div>
+                    <div class="stat-inline-label">Processing Time</div>
+                </div>
+                <div class="stat-inline">
+                    <div class="stat-inline-number">10K+</div>
+                    <div class="stat-inline-label">Images Analyzed</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="content-card">
+            <h2>How the AI Identification Process Works</h2>
+            <div class="process-grid">
+                <div class="process-card">
+                    <div class="process-number">1</div>
+                    <h3>Image Upload</h3>
+                    <p>User uploads a clear, high-resolution image of the fabric sample through our intuitive web interface.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-number">2</div>
+                    <h3>Preprocessing</h3>
+                    <p>The image is automatically enhanced, normalized, and prepared for AI analysis using advanced image processing techniques.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-number">3</div>
+                    <h3>Feature Extraction</h3>
+                    <p>The CNN model extracts key features including texture, patterns, weave type, and fiber characteristics using multiple convolutional layers.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-number">4</div>
+                    <h3>AI Classification</h3>
+                    <p>The trained model compares extracted features against its learned database of fabric patterns to identify the fabric type.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-number">5</div>
+                    <h3>Confidence Analysis</h3>
+                    <p>The system calculates confidence percentages for each possible fabric match using probability distribution.</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-number">6</div>
+                    <h3>Results Display</h3>
+                    <p>Detailed results including fabric type, confidence level, properties, and care instructions are instantly displayed.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Identifiable Fabrics -->
+        <div class="content-card">
+            <h2>Identifiable Fabric Types</h2>
+            <p>Our AI model has been trained to accurately identify a wide range of fabric types commonly used in the fashion and textile industry:</p>
+            
+            <div class="fabric-grid">
+                <div class="fabric-card">
+                    <div class="fabric-icon">🌿</div>
+                    <h4>Cotton</h4>
+                    <p>Natural, breathable, versatile</p>
+                </div>
+                <div class="fabric-card">
+                    <div class="fabric-icon">✨</div>
+                    <h4>Silk</h4>
+                    <p>Luxurious, smooth, lustrous</p>
+                </div>
+                <div class="fabric-card">
+                    <div class="fabric-icon">👖</div>
+                    <h4>Denim</h4>
+                    <p>Durable, twill weave, casual</p>
+                </div>
+                <div class="fabric-card">
+                    <div class="fabric-icon">🐑</div>
+                    <h4>Wool</h4>
+                    <p>Warm, elastic, insulating</p>
+                </div>
+                <div class="fabric-card">
+                    <div class="fabric-icon">💫</div>
+                    <h4>Chiffon</h4>
+                    <p>Sheer, lightweight, elegant</p>
+                </div>
+                <div class="fabric-card">
+                    <div class="fabric-icon">🔬</div>
+                    <h4>Polyester</h4>
+                    <p>Synthetic, wrinkle-resistant</p>
+                </div>
+                <div class="fabric-card">
+                    <div class="fabric-icon">🌾</div>
+                    <h4>Linen</h4>
+                    <p>Cool, absorbent, textured</p>
+                </div>
+                <div class="fabric-card">
+                    <div class="fabric-icon">💎</div>
+                    <h4>Satin</h4>
+                    <p>Glossy, smooth, formal</p>
+                </div>
+                <div class="fabric-card">
+                    <div class="fabric-icon">🎩</div>
+                    <h4>Velvet</h4>
+                    <p>Plush, soft, luxurious</p>
+                </div>
+                <div class="fabric-card">
+                    <div class="fabric-icon">💪</div>
+                    <h4>Nylon</h4>
+                    <p>Strong, elastic, quick-dry</p>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Key Features -->
+        <div class="content-card">
+            <h2>Key Features & Benefits</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Lightning Fast Processing</h4>
+                        <p>Get results in under 2 seconds with our optimized AI algorithms and cloud infrastructure</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>High Accuracy Rate</h4>
+                        <p>Achieve 95%+ identification accuracy through advanced deep learning models</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Multi-Device Support</h4>
+                        <p>Access from any device - desktop, tablet, or mobile phone with full functionality</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Educational Value</h4>
+                        <p>Learn about fabric properties, composition, and care instructions with each identification</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Cost Effective</h4>
+                        <p>Eliminate expensive lab testing costs and manual identification processes</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Detailed Analysis</h4>
+                        <p>Receive comprehensive reports including fiber content, weave type, and usage recommendations</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Global Database</h4>
+                        <p>Access identification based on international fabric standards and classifications</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>History Tracking</h4>
+                        <p>Keep records of all your fabric identifications for future reference and comparison</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Use Cases -->
+        <div class="content-card">
+            <h2>Real-World Applications</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Fashion Design Students</h4>
+                        <p>Learn to identify fabrics quickly and accurately for design projects and coursework</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Garment Manufacturers</h4>
+                        <p>Verify fabric quality and type during production to ensure consistency</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Quality Control</h4>
+                        <p>Quickly identify and sort fabrics in warehouses and distribution centers</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Textile Research</h4>
+                        <p>Analyze fabric samples for academic research and material science studies</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Retail & E-commerce</h4>
+                        <p>Provide accurate fabric information to customers for informed purchasing decisions</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-text">
+                        <h4>Textile Recycling</h4>
+                        <p>Sort and categorize fabrics for efficient recycling and sustainability initiatives</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2>Ready to Experience AI Fabric Identification?</h2>
+            <p>Start identifying fabrics instantly with our advanced AI technology</p>
+            <div class="cta-buttons">
+                <a href="userSignup.html" class="btn btn-primary">Get Started Free</a>
+                <a href="index.html#how-it-works" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 FabricSense - AI-Based Fabric Identification & Consumption Estimation System</p>
+        <p>Developed by D.M. Chathurya Hiruni Gunathilaka | Cardiff Metropolitan University</p>
+    </footer>
+
+    <script>
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.content-card, .process-card, .feature-item, .fabric-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

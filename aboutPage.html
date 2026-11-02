@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - FabricSense</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --accent: #e94560;
+            --accent-light: #ff6b81;
+            --text-dark: #333;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            color: var(--text-dark);
+            padding: 1.2rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 0.55rem 1.3rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: 2px solid rgba(233, 69, 96, 0.3);
+            color: var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(233, 69, 96, 0.08);
+            border-color: rgba(233, 69, 96, 0.6);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 6px 16px rgba(233, 69, 96, 0.25);
+        }
+
+        .nav-btn.primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(233, 69, 96, 0.35);
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* About Hero */
+        .about-hero {
+            margin-top: 80px;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            padding: 6rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(233, 69, 96, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 107, 129, 0.1), transparent 50%);
+            pointer-events: none;
+        }
+
+        .about-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .about-hero p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+            animation: fadeInUp 1.2s ease;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        /* About Content */
+        .about-content {
+            max-width: 1200px;
+            margin: -3rem auto 4rem;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .about-section {
+            background: white;
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .about-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.12);
+        }
+
+        .about-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-section p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        /* Mission & Vision Grid */
+        .mission-vision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .mission-card, .vision-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mission-card::before, .vision-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mission-card:hover, .vision-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(233, 69, 96, 0.2);
+        }
+
+        .mission-card:hover::before, .vision-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.3);
+        }
+
+        .mission-card h2, .vision-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .mission-card p, .vision-card p {
+            color: #666;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Technology Stack */
+        .tech-stack {
+            background: white;
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+        }
+
+        .tech-stack h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.05) 0%, rgba(255, 107, 129, 0.05) 100%);
+            padding: 2rem 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid rgba(233, 69, 96, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tech-item:hover {
+            transform: translateY(-8px);
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.1) 0%, rgba(255, 107, 129, 0.1) 100%);
+            border-color: rgba(233, 69, 96, 0.3);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.2);
+        }
+
+        .tech-item h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .tech-item p {
+            color: #666;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Key Features List */
+        .features-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features-list li {
+            padding: 1rem 0;
+            padding-left: 3rem;
+            position: relative;
+            color: #666;
+            font-size: 1.05rem;
+            transition: all 0.3s;
+        }
+
+        .features-list li:hover {
+            color: var(--accent);
+            padding-left: 3.5rem;
+        }
+
+        .features-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            opacity: 0.9;
+        }
+
+        footer p:first-child {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .about-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .about-hero p {
+                font-size: 1.1rem;
+            }
+
+            nav ul {
+                gap: 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .about-section,
+            .tech-stack {
+                padding: 2rem;
+            }
+
+            .mission-vision-grid,
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-text {
+                font-size: 1.2rem;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            nav ul {
+                display: none;
+            }
+
+            .nav-actions {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="index.html" class="logo-container">
+                <div class="logo-text">FabricSense</div>
+            </a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="index.html#how-it-works">How It Works</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contactPage.html">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a class="nav-btn" href="userLogin.html">LOGIN</a>
+                <a class="nav-btn primary" href="userSignup.html">SIGN UP</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- About Hero -->
+    <section class="about-hero">
+        <h1>About FabricSense</h1>
+        <p>Revolutionizing fabric analysis and consumption estimation through the power of artificial intelligence</p>
+    </section>
+
+    <!-- About Content -->
+    <section class="about-content">
+        <!-- Introduction -->
+        <div class="about-section">
+            <h2>What is FabricSense?</h2>
+            <p>FabricSense is an innovative AI-based system designed to revolutionize the way fashion students, designers, and textile professionals identify fabrics and estimate consumption requirements. By leveraging cutting-edge machine learning technologies, we provide accurate, data-driven insights that enhance learning, improve efficiency, and promote sustainable practices in the fashion industry.</p>
+            <p>Our platform combines the power of Convolutional Neural Networks (CNN) for fabric identification with advanced regression models for consumption estimation, all wrapped in an intuitive web interface that makes sophisticated AI technology accessible to everyone.</p>
+        </div>
+
+        <!-- Mission & Vision -->
+        <div class="mission-vision-grid">
+            <div class="mission-card">
+                <h2>Our Mission</h2>
+                <p>To empower fashion students and professionals with AI-driven tools that simplify fabric identification and consumption estimation, bridging the gap between traditional textile education and modern technological innovation.</p>
+            </div>
+
+            <div class="vision-card">
+                <h2>Our Vision</h2>
+                <p>To become the leading platform for AI-assisted fabric analysis in fashion education, promoting sustainable design practices and digital literacy in the textile industry worldwide.</p>
+            </div>
+        </div>
+
+        <!-- Why FabricSense -->
+        <div class="about-section">
+            <h2>Why FabricSense?</h2>
+            <p>Traditional fabric identification and consumption estimation methods rely heavily on manual observation and experience-based calculations, which are time-consuming, subjective, and prone to errors. FabricSense addresses these challenges by:</p>
+            <ul class="features-list">
+                <li>Providing instant, accurate fabric identification from uploaded images</li>
+                <li>Offering data-driven consumption estimates based on garment specifications</li>
+                <li>Reducing material waste through precise calculations</li>
+                <li>Enhancing learning experiences for fashion students</li>
+                <li>Bridging the gap between academic knowledge and industry practices</li>
+                <li>Promoting sustainable and eco-friendly design approaches</li>
+            </ul>
+        </div>
+
+        <!-- Technology Stack -->
+        <div class="tech-stack">
+            <h2>Technology Stack</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <h3>Python</h3>
+                    <p>AI/ML Development</p>
+                </div>
+                <div class="tech-item">
+                    <h3>TensorFlow</h3>
+                    <p>Deep Learning Framework</p>
+                </div>
+                <div class="tech-item">
+                    <h3>CNN Model</h3>
+                    <p>Fabric Identification</p>
+                </div>
+                <div class="tech-item">
+                    <h3>HTML/CSS/JS</h3>
+                    <p>Frontend Development</p>
+                </div>
+                <div class="tech-item">
+                    <h3>PHP</h3>
+                    <p>Backend Logic</p>
+                </div>
+                <div class="tech-item">
+                    <h3>MySQL</h3>
+                    <p>Database Management</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 FabricSense - AI-Based Fabric Identification & Consumption Estimation System</p>
+        <p>Developed by D.M. Chathurya Hiruni Gunathilaka | Cardiff Metropolitan University</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.about-section, .mission-card, .vision-card, .tech-stack').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
